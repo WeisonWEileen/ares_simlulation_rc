@@ -3,10 +3,11 @@
 
 <p>目前包尚未包括fastlio和livox,自行安装</p>
 <html>
-
-    cd colcon_ws/src
-    git clone
-    cd ..
+ 
+    cd colcon_ws/src #进入你的工作空间的src目录
+    mkdir rc && cd rc
+    git clone https://github.com/WeisonWEileen/ares_simlulation_rc.git
+    cd colcon_ws      
     colcon build --symlink-build
 
 </html>
