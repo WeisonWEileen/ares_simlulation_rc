@@ -13,26 +13,6 @@
         </inertial>
     </xacro:macro>
 
-    <link name="base_footprint">
-        <visual>
-            <geometry>
-                <box size="0.001 0.001 0.001"/>
-            </geometry>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-        </visual>
-    </link>
-
-    <gazebo reference="base_footprint">
-        <material>Gazebo/Green</material>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-
-    <joint name="base_footprint_joint" type="fixed">
-        <origin xyz="0 0 0" />
-        <parent link="base_footprint" />
-        <child link="base_link" />
-    </joint>
-
     <link name="base_link">
         <visual>
             <geometry>
@@ -61,14 +41,6 @@
                 <color rgba="0 0 0 1"/>
             </material>
         </visual>
-         <surface>
-          <friction>
-            <ode>
-              <mu>12.0</mu>
-              <mu2>10.0</mu2>
-            </ode>
-          </friction>
-        </surface>
         <collision>
             <geometry>
                 <cylinder length="${length_wheel}" radius="${radius_wheel}"/>
@@ -87,14 +59,6 @@
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <material name="black"/>
         </visual>
-         <surface>
-          <friction>
-            <ode>
-              <mu>12.0</mu>
-              <mu2>10.0</mu2>
-            </ode>
-          </friction>
-        </surface>
         <collision>
             <geometry>
                 <cylinder length="${length_wheel}" radius="${radius_wheel}"/>
@@ -113,14 +77,6 @@
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <material name="black"/>
         </visual>
-         <!-- <surface>
-          <friction>
-            <ode>
-              <mu>5.0</mu>
-              <mu2>10.0</mu2>
-            </ode>
-          </friction>
-        </surface> -->
         <collision>
             <geometry>
                 <cylinder length="${length_wheel}" radius="${radius_wheel}"/>
@@ -139,14 +95,6 @@
             <origin rpy="0 0 0" xyz="0 0 0" />
             <material name="black"/>
         </visual>
-         <!-- <surface>
-          <friction>
-            <ode>
-              <mu>5.0</mu>
-              <mu2>10.0</mu2>
-            </ode>
-          </friction>
-        </surface> -->
         <collision>
             <geometry>
                 <cylinder length="${length_wheel}" radius="${radius_wheel}"/>
@@ -246,23 +194,24 @@
     <!-- Drive controller -->
     <gazebo>
         <plugin name="mecanum_controller" filename="libgazebo_ros_planar_move.so">
-            <alwaysOn>true</alwaysOn>
-            <updateRate>20.0</updateRate>
-            <robotNamespace>/</robotNamespace>
-            <commandTopic>cmd_vel</commandTopic>
-            <odometryTopic>odom</odometryTopic>
-            <odometryFrame>odom</odometryFrame>
+            <ros>
+                <!-- <namespace>/demo</namespace> -->
+                <remapping>cmd_vel:=cmd_vel</remapping>
+                <remapping>odom:=odom</remapping>
+            </ros>
+
+            <update_rate>100</update_rate>
+            <publish_rate>100</publish_rate>
+
+            <publish_odom>false</publish_odom>
+            <publish_odom_tf>false</publish_odom_tf>
+
             <leftFrontJoint>base_to_wheel1</leftFrontJoint>
             <rightFrontJoint>base_to_wheel3</rightFrontJoint>
             <leftRearJoint>base_to_wheel2</leftRearJoint>
             <rightRearJoint>base_to_wheel4</rightRearJoint>
             <wheelSeparation>0.26</wheelSeparation>
             <wheelDiameter>0.12</wheelDiameter>
-            <odometryRate>20.0</odometryRate>
-            <torque>2</torque>
-            <robotBaseFrame>base_footprint</robotBaseFrame>
-            <publishOdomTF>true</publishOdomTF>
-            <broadcastTF>true</broadcastTF>
         </plugin>
     </gazebo>
 
@@ -276,7 +225,7 @@
             <visualize>true</visualize>
             <topic>__default_topic__</topic>
             <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-                <topicName>imu</topicName>
+                <topicName>/livox/imu</topicName>
                 <bodyName>imu_link</bodyName>
                 <updateRateHZ>100.0</updateRateHZ>
                 <gaussianNoise>0.0</gaussianNoise>
@@ -289,7 +238,7 @@
                 <noiseDensity>0.0</noiseDensity>
                 <randomWalk>0.0</randomWalk>
                 <ros>
-                    <remapping>~/out:=/imu</remapping>
+                    <remapping>~/out:=/livox/imu</remapping>
                 </ros>
             </plugin>
         </sensor>
@@ -297,7 +246,7 @@
 
     <!-- Livox-Mid360  -->
     <xacro:include filename="$(find ros2_livox_simulation)/urdf/mid360.xacro" />
-    <xacro:mid360 name="livox" parent="base_link" topic="mid360">
+    <xacro:mid360 name="livox_frame" parent="base_link" topic="/livox/lidar">
         <origin xyz="0 0.0 0.175" rpy="0 0 0"/>
     </xacro:mid360>
 

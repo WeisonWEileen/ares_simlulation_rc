@@ -3,7 +3,7 @@
 <p>效果预览</p>
 <img src="https://github.com/WeisonWEileen/ares_simlulation_rc/raw/master/docs/preview.png" alt="picture" title="gazebo仿真与rviz显示">
 
-<p>目前包尚未包括fastlio和livox,自行安装</p>
+<p>目前包尚未包括fastlio,livox,icp,自行安装</p>
 <html>
  
     cd colcon_ws/src #进入你的工作空间的src目录
